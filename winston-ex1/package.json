@@ -1,0 +1,16 @@
+{
+  "name": "winston-ex1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "triple-beam": "^1.3.0",
+    "winston": "^3.2.1"
+  }
+}
