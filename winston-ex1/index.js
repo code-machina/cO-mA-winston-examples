@@ -1,34 +1,42 @@
-const winston = require('winston');
+const { createLogger, format, transports } = require('winston');
+const { combine, timestamp, label, prettyPrint, colorize, simple, printf } = format;
 
-const { LEVEL, MESSAGE, SPLAT } = require('triple-beam')
-
-
-console.log(LEVEL === Symbol.for('level'));
-// true
-
-console.log(MESSAGE === Symbol.for('message'));
-// true
-
-console.log(SPLAT === Symbol.for('splat'));
-// true
-
-const logger = winston.createLogger({
+// createLogger 함수를 통해 logger 를 생성합니다.
+const logger = createLogger({
+  format: combine(colorize(), timestamp(), simple()),
   level: 'info',
-  format: winston.format.json(),
-  defaultMeta: {service: 'winston-example-1'},
   transports: [
-    new winston.transports.File({ filename: 'error.log', level: 'error'}),
-    new winston.transports.File({ filename: 'combined.log', level: 'info'}),
-    new winston.transports.Console(),
+    new transports.Console()
   ]
 })
 
-logger.log({ 
-  level: 'info',
-  message: 'Hello World!'
+// logger.info(`[DEBUG] 디버깅 모드에 진입하였습니다.`)
+
+
+const logger2 = createLogger({
+  transports: [
+    new transports.Console({
+      format: format.simple()
+    })
+  ]
 })
 
-logger.log({
-  level: 'error',
-  message: 'Error in example!'
-})
+logger2.info('helloworld')
+
+
+// const { createLogger, format, transports } = require('winston');
+// const { combine, timestamp, colorize, printf } = format;
+
+const level = process.env.LOG_LEVEL || 'debug';
+
+const myFormat = printf(({ level, message, label, timestamp }) => {
+	return `${timestamp} ${level}: ${message}`;
+});
+
+const logger3 = createLogger({
+	format: combine(colorize(), timestamp(), myFormat, format.json()),
+	transports: [new transports.Console()]
+});
+
+
+logger3.info('helloworld')
